@@ -141,44 +141,6 @@ def validate(net, net2, loader):
     print('val loss={:.4f}'.format(val_loss))
 
 
-    # embs_a = embs_a.data
-    # embs_b = embs_b.data
-    #
-    # for i in range(len(embs_a)):
-    #     cos_dis = embs_a[i].dot(embs_b[i]) / (embs_a[i].norm() * embs_b[i].norm() + 1e-5)
-    #     dists.append([cos_dis, int(labels[i])])
-
-    # dists = np.array(dists)
-    #
-    # tprs = []
-    # fprs = []
-    # accuracy = []
-    # thd = []
-    #
-    # folds = KFold(n=len(dists), n_folds=5, shuffle=False)
-    # thresh = np.arange(-1.0, 1.0, 0.005)
-    # for idx, (train, test) in enumerate(folds):
-    #     best_thresh = find_best_threshold(thresh, dists[train])
-    #     tpr, fpr, acc = eval_acc(best_thresh, dists[test])
-    #     tprs += [tpr]
-    #     fprs += [fpr]
-    #     accuracy += [acc]
-    #     thd.append(best_thresh)
-    # Compute ROC curve and ROC area for each class
-    # fpr = dict()
-
-    # tpr = dict()
-    # roc_auc = dict()
-    # for i in range(n_classes):
-    #     fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
-    #     roc_auc[i] = auc(fpr[i], tpr[i])
-
-    # print('TPR={:.4f} FPR={:.4f} ACC={:.4f} std={:.4f} thd={:.4f}'.format(np.mean(tprs),
-    #                                                                       np.mean(fprs),
-    #                                                                       np.mean(accuracy),
-    #                                                                       np.std(accuracy),
-    #                                                                       np.mean(thd)))
-
     return accuracy, val_loss
 
 
@@ -218,14 +180,7 @@ def train(net, net2, optimizer, epoch, loader):
         # _, predicted = torch.max(outputs.data, 1)
         # total += targets.size(0)
         # correct += predicted.eq(targets.data).cpu().sum()
-        #
-        # printoneline(dt(), 'Te=%d Loss=%.4f | AccT=%.4f%% (%d/%d) %.4f %.2f %d'
-        #              % (epoch, train_loss / (batch_idx + 1), 100.0 * correct / total, correct, total,
-        #                 lossd, criterion.lamb, criterion.it))
 
-        # printoneline(dt(), 'Te=%d Loss=%.4f | %.4f'
-        #              % (epoch, train_loss / (batch_idx + 1),
-        #                 lossd))
 
         if batchid % args.print_freq == 0:
             print("Batch {}/{}\t Loss {:.6f} ({:.6f})".format(batchid, len(loader),
@@ -331,25 +286,7 @@ if __name__ == "__main__":
 
     # model_state = net.state_dict()
 
-    # if not args.finetune:
-    #     print('Fine-tuning pretrained model at {}'.format(args.pretrained))
-    #
-    #     # for name, param in net.named_parameters():
-    #     #     print(name, param.size())
-    #     # if (name[:4] == 'conv' or name[:4] == 'relu') and name[4] is not '4':
-    #     #     param.requires_grad = False
-    #
-    #     pretrained_state = torch.load(args.pretrained)
-    #     # for key, value in pretrained_state.items():
-    #     # print(key, value.size())
-    #
-    #     pretrained_state = {k: v for k, v in pretrained_state.items() if
-    #                         k in model_state and v.size() == model_state[k].size()}
-    #     model_state.update(pretrained_state)
-    #     net.load_state_dict(model_state)
-    #
-    #     # for name, param in net.named_parameters():
-    #     #     print(name, param.size())
+
 
     if use_gpu:
         net = nn.DataParallel(net).cuda()
